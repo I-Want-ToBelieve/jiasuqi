@@ -14,7 +14,7 @@ sudo -E qemu-system-x86_64 -enable-kvm -daemonize \
     -net tap,ifname="$INTERFACE",script="$pwd/linux/vm-up.sh",downscript="$pwd/linux/vm-down.sh" \
     -m 2G \
     -vga qxl \
-    -spice addr=127.0.0.1,port="$SPICE_PORT",disable-ticketing \
+    -spice addr=127.0.0.1,port="$SPICE_PORT",disable-ticketing=on \
     -machine usb=on \
     -device usb-tablet \
     -device virtio-serial \
@@ -22,4 +22,4 @@ sudo -E qemu-system-x86_64 -enable-kvm -daemonize \
     -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
     "$@"
 
-exec gtk3-nocsd remote-viewer --title Windows spice://127.0.0.1:"$SPICE_PORT"
+exec gtk3-nocsd remote-viewer --title Windows spice://127.0.0.1:"$SPICE_PORT" 2> /dev/null

@@ -13,7 +13,7 @@ depend_bins=(
     qemu-system-x86_64 remote-viewer ipset iptables ip nslookup ssh aria2c
 )
 
-zenity_version=$(zenity --version)
+zenity_version=$(zenity --version 2> /dev/null)
 
 if [ "$zenity_version" = "" ]; then
     echo
@@ -37,7 +37,7 @@ fi
 
 for depend_bin in "${depend_bins[@]}"; do
     if ! command -v "$depend_bin"; then
-        zenity --info --text="找不到 $depend_bin 命令，请按教程安装依赖包。" --width=600
+        zenity --info --text="找不到 $depend_bin 命令，请按教程安装依赖包。" --width=600 2> /dev/null
         exit
     fi
 done
@@ -58,10 +58,10 @@ END_HEREDOC
 )
 
 exe_name=$(cat /tmp/jiasuqi-file.txt)
-zenity --info --text="$text" --width=600
+zenity --info --text="$text" --width=600 2> /dev/null
 
-if ! exe_name=$(zenity --file-selection --filename="$exe_name" --title="选择要加速的游戏程序" --file-filter="要加速的游戏程序 (*.exe) | *.exe *.EXE"); then
-    zenity --info --text="您未选择要加速的游戏程序，加速器无法启动。" --width=500
+if ! exe_name=$(zenity --file-selection --filename="$exe_name" --title="选择要加速的游戏程序" --file-filter="要加速的游戏程序 (*.exe) | *.exe *.EXE" 2> /dev/null); then
+    zenity --info --text="您未选择要加速的游戏程序，加速器无法启动。" --width=500 2> /dev/null
     exit
 fi
 
@@ -88,7 +88,7 @@ text=$(
 END_HEREDOC
 )
 
-zenity --info --text="$text" --width=700
+zenity --info --text="$text" --width=700 2> /dev/null
 
 echo
 echo ===================================================================
@@ -98,7 +98,7 @@ export SUDO_ASKPASS="$pwd/linux/askpass.sh"
 
 echo "获取root权限……"
 sudo -A echo "获取root权限成功" || {
-    zenity --info --text="sudo密码错误，加速器无法启动" --width=300
+    zenity --info --text="sudo密码错误，加速器无法启动" --width=300 2> /dev/null
     exit
 }
 
@@ -122,8 +122,8 @@ echo
 
 echo "初始化代理……"
 sudo -A "$pwd/linux/jiasuqi" "$VM_IP_ADDR" "$exe_name" || {
-    zenity --info --text="sudo密码错误，加速器无法启动" --width=300
+    zenity --info --text="sudo密码错误，加速器无法启动" --width=300 2> /dev/null
     exit
 }
 
-zenity --info --text="代理已停止" --width=100
+zenity --info --text="代理已停止" --width=100 2> /dev/null

@@ -2,8 +2,10 @@
 
 pwd="$(realpath "$(dirname "$0")")"
 
+# shellcheck source=/dev/null
 source "$pwd/linux/jiasuqi.conf"
 
+# shellcheck disable=SC2140
 sudo -E qemu-system-x86_64 -enable-kvm -daemonize \
     -cpu host \
     -smp 2,sockets=1,cores=2,threads=1 \

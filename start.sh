@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 pwd="$(realpath "$(dirname "$0")")"
+
+# shellcheck source=/dev/null
 source "$pwd/linux/jiasuqi.conf"
 
 echo "$pwd"
@@ -56,12 +58,9 @@ END_HEREDOC
 )
 
 exe_name=$(cat /tmp/jiasuqi-file.txt)
-
 zenity --info --text="$text" --width=600
-exe_name=$(zenity --file-selection --filename="$exe_name" --title="选择要加速的游戏程序" \
-    --file-filter='要加速的游戏程序 (*.exe) | *.exe *.EXE')
 
-if ! [ "$?" = "0" ]; then
+if ! exe_name=$(zenity --file-selection --filename="$exe_name" --title="选择要加速的游戏程序" --file-filter="要加速的游戏程序 (*.exe) | *.exe *.EXE"); then
     zenity --info --text="您未选择要加速的游戏程序，加速器无法启动。" --width=500
     exit
 fi

@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2154
+
 proxy_ip="$1"      # socks代理IP
 proxy_exe="$2"     # 要代理的exe名称
 
 
 pwd="$(dirname "$0")"
+# shellcheck source=/dev/null
 source "$pwd/jiasuqi.conf"
 
 
@@ -82,7 +85,7 @@ cat << EOF > /tmp/jiasuqi-init.bat
 chcp 65001 > nul$CR
 DEL /F "C:\\Tools\\3proxy\\binlink\\$proxy_exe"
 mklink /H "C:\\Tools\\3proxy\\binlink\\$proxy_exe" "C:\\Tools\\3proxy\\bin\\3proxy.exe"$CR
-echo 请在Windows中启动加速器，然后双击桌面上的“启动代理.bat”。 > "C:\\Tools\\3proxy\\log\\3proxy.log"$CR
+echo 请在Windows中启动加速器，然后双击桌面上的"启动代理.bat"。 > "C:\\Tools\\3proxy\\log\\3proxy.log"$CR
 echo 要停止代理，请按Ctrl+C，或者直接给Win10虚拟机关机。 >> "C:\\Tools\\3proxy\\log\\3proxy.log"$CR
 EOF
 
@@ -90,7 +93,7 @@ cat << EOF > /tmp/jiasuqi-run.bat
 @echo off$CR
 chcp 65001 > nul$CR
 echo 代理已启动，请不要关闭本窗口，否则Linux会断网。$CR
-echo 如果加速器启动加速后没有生效，请关闭本窗口并双击“启动代理.bat”。$CR
+echo 如果加速器启动加速后没有生效，请关闭本窗口并双击"启动代理.bat"。$CR
 echo 要停止代理，请直接给Win10虚拟机关机，或者在Linux终端里按Ctrl+C。$CR
 echo 代理已启动。要停止代理，请直接给Win10虚拟机关机，或者在此终端按Ctrl+C。 >> "C:\\Tools\\3proxy\\log\\3proxy.log"$CR
 "C:\\Tools\\3proxy\\binlink\\$proxy_exe" "C:\\Tools\\3proxy\\cfg\\3proxy.cfg"$CR

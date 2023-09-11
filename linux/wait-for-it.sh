@@ -81,7 +81,7 @@ wait_for_wrapper()
         timeout $WAITFORIT_BUSYTIMEFLAG "$WAITFORIT_TIMEOUT" "$0" --child --host="$WAITFORIT_HOST" --port="$WAITFORIT_PORT" --timeout="$WAITFORIT_TIMEOUT" &
     fi
     WAITFORIT_PID=$!
-    trap "kill -INT -$WAITFORIT_PID" INT
+    trap 'kill -INT -$WAITFORIT_PID' INT
     wait $WAITFORIT_PID
     WAITFORIT_RESULT=$?
     if [[ $WAITFORIT_RESULT -ne 0 ]]; then
@@ -95,7 +95,7 @@ while [[ $# -gt 0 ]]
 do
     case "$1" in
         *:* )
-        WAITFORIT_hostport=(${1//:/ })
+        WAITFORIT_hostport=("${1//:/ }")
         WAITFORIT_HOST=${WAITFORIT_hostport[0]}
         WAITFORIT_PORT=${WAITFORIT_hostport[1]}
         shift 1
@@ -190,6 +190,7 @@ else
     fi
 fi
 
+# shellcheck disable=SC2128
 if [[ $WAITFORIT_CLI != "" ]]; then
     if [[ $WAITFORIT_RESULT -ne 0 && $WAITFORIT_STRICT -eq 1 ]]; then
         echoerr "$WAITFORIT_cmdname: strict mode, refusing to execute subprocess"

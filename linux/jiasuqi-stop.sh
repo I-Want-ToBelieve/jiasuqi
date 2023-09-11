@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2154
+
 proxy_ip="$1"      # socks代理IP
 proxy_exe="$2"     # 要代理的exe名称
 
 
 pwd="$(dirname "$0")"
+# shellcheck source=/dev/null
 source "$pwd/jiasuqi.conf"
 
 
@@ -19,9 +22,9 @@ del /F "C:\\Users\\Public\\Desktop\启动代理.bat"$CR
 del /F "C:\\Tools\\3proxy\\binlink\\$proxy_exe"$CR
 EOF
 
-"$pwd/wait-for-it.sh" -h "$proxy_ip" -p 22 -t 5
 
-if [ "$?" = "0" ]; then
+
+if "$pwd/wait-for-it.sh" -h "$proxy_ip" -p 22 -t 5; then
     scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-stop.bat "$windows_user@$proxy_ip:C:\\Tools\\jiasuqi-stop.bat"
     ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Tools\\jiasuqi-stop.bat"
 else
@@ -73,6 +76,6 @@ ss-tproxy flush-dnscache &>/dev/null
 
 # 结束代理进程
 if [ -f /tmp/jiasuqi.pid ]; then
-    kill -9 $(cat /tmp/jiasuqi.pid)
+    kill -9 "$(cat /tmp/jiasuqi.pid)"
     rm /tmp/jiasuqi.pid
 fi

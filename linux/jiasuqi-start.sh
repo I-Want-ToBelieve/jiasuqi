@@ -83,10 +83,10 @@ CR=$'\r\n\r'
 cat << EOF > /tmp/jiasuqi-init.bat
 @echo off$CR
 chcp 65001 > nul$CR
-DEL /F "C:\\Tools\\3proxy\\binlink\\$proxy_exe"
-mklink /H "C:\\Tools\\3proxy\\binlink\\$proxy_exe" "C:\\Tools\\3proxy\\bin\\3proxy.exe"$CR
-echo 请在Windows中启动加速器，然后双击桌面上的"启动代理.bat"。 > "C:\\Tools\\3proxy\\log\\3proxy.log"$CR
-echo 要停止代理，请按Ctrl+C，或者直接给Win10虚拟机关机。 >> "C:\\Tools\\3proxy\\log\\3proxy.log"$CR
+DEL /F "C:\\Users\\Public\\Desktop\\3proxy\\links\\$proxy_exe"
+mklink /H "C:\\Users\\Public\\Desktop\\3proxy\\links\\$proxy_exe" "C:\\Users\\Public\\Desktop\\3proxy\\bin\\3proxy.exe"$CR
+echo 请在Windows中启动加速器，然后双击桌面上的"启动代理.bat"。 > "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
+echo 要停止代理，请按Ctrl+C，或者直接给Win10虚拟机关机。 >> "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
 EOF
 
 cat << EOF > /tmp/jiasuqi-run.bat
@@ -95,8 +95,8 @@ chcp 65001 > nul$CR
 echo 代理已启动，请不要关闭本窗口，否则Linux会断网。$CR
 echo 如果加速器启动加速后没有生效，请关闭本窗口并双击"启动代理.bat"。$CR
 echo 要停止代理，请直接给Win10虚拟机关机，或者在Linux终端里按Ctrl+C。$CR
-echo 代理已启动。要停止代理，请直接给Win10虚拟机关机，或者在此终端按Ctrl+C。 >> "C:\\Tools\\3proxy\\log\\3proxy.log"$CR
-"C:\\Tools\\3proxy\\binlink\\$proxy_exe" "C:\\Tools\\3proxy\\cfg\\3proxy.cfg"$CR
+echo 代理已启动。要停止代理，请直接给Win10虚拟机关机，或者在此终端按Ctrl+C。 >> "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
+"C:\\Users\\Public\\Desktop\\3proxy\\links\\$proxy_exe" "C:\\Users\\Public\\Desktop\\3proxy\\cfg\\3proxy.cfg"$CR
 TASKKILL /IM "$proxy_exe"
 DEL
 EOF
@@ -110,22 +110,30 @@ else
 fi
 
 # 创建文件夹
-ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" MD "C:\\Tools"
+ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" MD "C:\\Users\\Public\\Desktop"
 
 # 拷贝二进制和配置文件
 scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" -r \
     "$pwd/../windows-$windows_arch/3proxy/" \
     "$pwd/../windows-$windows_arch/tail/" \
-    "$windows_user@$proxy_ip:C:\\Tools\\"
+    "$windows_user@$proxy_ip:C:\\Users\\Public\\Desktop\\"
 
 # 拷贝启动脚本
-scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-init.bat "$windows_user@$proxy_ip:C:\\Tools\\jiasuqi-init.bat"
-scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-run.bat "$windows_user@$proxy_ip:C:\\Users\\Public\\Desktop\启动代理.bat"
+scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-init.bat "$windows_user@$proxy_ip:C:\\Users\\Public\\Desktop\\jiasuqi-init.bat"
+scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-run.bat "$windows_user@$proxy_ip:C:\\Users\\Public\\Desktop\\启动代理.bat"
 
 rm /tmp/jiasuqi-init.bat /tmp/jiasuqi-run.bat
 
-ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Tools\\jiasuqi-init.bat"
+ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Users\\Public\\Desktop\\jiasuqi-init.bat"
 
 echo $$ > /tmp/jiasuqi.pid
 
-exec ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Tools\\tail\\tail.exe" -f "C:\\Tools\\3proxy\\log\\3proxy.log"
+# 拷贝 windows 相关的一些脚本
+# 禁止 windows 更新脚本
+scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" -r \
+    "$pwd/../windows-scripts/" \
+    "$windows_user@$proxy_ip:C:\\Users\\Public\\Desktop\\"
+
+exec ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Users\\Public\\Desktop\\tail\\tail.exe" -f "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"
+
+

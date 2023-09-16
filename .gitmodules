@@ -1,0 +1,3 @@
+[submodule "windows-scripts/windows-update-disabler"]
+	path = windows-scripts/windows-update-disabler
+	url = https://github.com/tsgrgo/windows-update-disabler

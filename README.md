@@ -1,3 +1,10 @@
+## Other
+
+```zsh
+git submodule init
+git submodule update
+```
+
 # 在Linux中通过虚拟机使用Windows版网游加速器
 
 前往 [https://hu60.cn/q.php/bbs.topic.95932.html](https://hu60.cn/q.php/bbs.topic.95932.html) 查看安装使用教程。
@@ -155,7 +162,7 @@ qemu-img resize ~/jiasuqi/vm/windows.img +10G
     Linux通过源于ss-tproxy的脚本和静态编译的二进制ipt2socks，实现把Linux主动发起的所有TCP/UDP连接全部转发到虚拟机内的3proxy socks代理。此时，对于加速器想转发的流量，加速器就可以转发到自己服务器。对于加速器不转发的流量，就通过虚拟机网络直接发出去。
     修改/etc/resolv.conf，DNS改为虚拟机IP，这样就可以应用加速器修改后的域名解析结果。DNS服务也由3proxy提供。
     Linux侧通过SSH与Windows侧通信。在Windows里运行了微软发布的SSH服务器（https://github.com/powershell/win32-openssh）。
-    Windows侧的文件放在“C:\Tools”文件夹里，与Linux里的windows-x86文件夹内容相同。其中的OpenSSH进行了安装，放置了Linux侧的公钥并修复了权限。
+    Windows侧的文件放在“C:\Users\Public\Desktop”文件夹里，与Linux里的windows-x86文件夹内容相同。其中的OpenSSH进行了安装，放置了Linux侧的公钥并修复了权限。
     采用了CPRA_X86FRE_ZH-CN_DREY.iso这个精简版Win10镜像。用32位是因为64位安装后镜像太大，占用的内存也更多。
     压缩包内的vm-cli.sh里有虚拟机启动命令，可以在里面改内存和核数。默认是2GB内存（-m 2G）和2核（-smp 2,sockets=1,cores=2,threads=1，这四个数字分别是当前分配，插槽，核心，线程。目前的数字代表：只有1个CPU插槽sockets=1，插槽里的CPU有2个核心cores=2，每个核心1线程threads=1，也就是不支持超线程，然后把这个CPU中的2核全部分配给虚拟机-smp 2，你可以根据你的CPU实际情况进行调整）。
     顺便一提，之所以要手动双击桌面上的“启动代理.bat”，不通过SSH由Linux侧自动启动，是因为我发现自动启动时加速器的非虚拟网卡模式（就是除了模式3之外的）都不会生效。但是如果手动启动，迅游的模式4就可以生效。

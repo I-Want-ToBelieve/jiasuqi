@@ -18,15 +18,15 @@ cat << EOF > /tmp/jiasuqi-stop.bat
 chcp 65001 > nul$CR
 taskkill /F /IM "$proxy_exe"$CR
 taskkill /F /IM "tail.exe"$CR
-del /F "C:\\Users\\Public\\Desktop\启动代理.bat"$CR
-del /F "C:\\Tools\\3proxy\\binlink\\$proxy_exe"$CR
+del /F "C:\\Users\\Public\\Desktop\\启动代理.bat"$CR
+del /F "C:\\Users\\Public\\Desktop\\3proxy\\links\\$proxy_exe"$CR
 EOF
 
 
 
 if "$pwd/wait-for-it.sh" -h "$proxy_ip" -p 22 -t 5; then
-    scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-stop.bat "$windows_user@$proxy_ip:C:\\Tools\\jiasuqi-stop.bat"
-    ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Tools\\jiasuqi-stop.bat"
+    scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-stop.bat "$windows_user@$proxy_ip:C:\\Users\\Public\\Desktop\\jiasuqi-stop.bat"
+    ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Users\\Public\\Desktop\\jiasuqi-stop.bat"
 else
     echo "虚拟机已关机，不需要停止虚拟机内代理。"
 fi

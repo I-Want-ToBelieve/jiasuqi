@@ -2,8 +2,8 @@
 
 # shellcheck disable=SC2154
 
-proxy_ip="$1"      # socks代理IP
-proxy_exe="$2"     # 要代理的exe名称
+proxy_ip="$1"      # socks 代理 IP
+proxy_exe="$2"     # 要代理的 exe 名称
 
 
 pwd="$(dirname "$0")"
@@ -15,18 +15,18 @@ source "$pwd/jiasuqi.conf"
 "$pwd/jiasuqi-stop.sh" &>/dev/null
 
 
-# 启动iptables转socks代理进程
+# 启动 iptables 转 socks 代理进程
 nohup "$pwd/ipt2socks" --server-addr "$proxy_ip" --server-port "$proxy_port" --listen-addr4 "$ipt2socks_ip" --listen-port "$ipt2socks_port" &>/var/log/ipt2socks.log &
 
 
-# 修改DNS
+# 修改 DNS
 touch /etc/resolv.conf
 echo "nameserver $DNS_SERVER1" >/tmp/jiasuqi-resolv.conf
 echo "nameserver $DNS_SERVER2" >>/tmp/jiasuqi-resolv.conf
 mount --bind /tmp/jiasuqi-resolv.conf /etc/resolv.conf
 
 
-# 关闭IPv6
+# 关闭 IPv6
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sysctl -w net.ipv6.conf.default.disable_ipv6=1
 
@@ -85,23 +85,23 @@ cat << EOF > /tmp/jiasuqi-init.bat
 chcp 65001 > nul$CR
 DEL /F "C:\\Users\\Public\\Desktop\\3proxy\\links\\$proxy_exe"
 mklink /H "C:\\Users\\Public\\Desktop\\3proxy\\links\\$proxy_exe" "C:\\Users\\Public\\Desktop\\3proxy\\bin\\3proxy.exe"$CR
-echo 请在Windows中启动加速器，然后双击桌面上的"启动代理.bat"。 > "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
-echo 要停止代理，请按Ctrl+C，或者直接给Win10虚拟机关机。 >> "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
+echo 请在 Windows 中启动加速器,然后双击桌面上的 "启动代理.bat". > "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
+echo 要停止代理,请按 Ctrl+C,或者直接给 Win10 虚拟机关机. >> "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
 EOF
 
 cat << EOF > /tmp/jiasuqi-run.bat
 @echo off$CR
 chcp 65001 > nul$CR
-echo 代理已启动，请不要关闭本窗口，否则Linux会断网。$CR
-echo 如果加速器启动加速后没有生效，请关闭本窗口并双击"启动代理.bat"。$CR
-echo 要停止代理，请直接给Win10虚拟机关机，或者在Linux终端里按Ctrl+C。$CR
-echo 代理已启动。要停止代理，请直接给Win10虚拟机关机，或者在此终端按Ctrl+C。 >> "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
+echo 代理已启动,请不要关闭本窗口,否则 Linux 会断网.$CR
+echo 如果加速器启动加速后没有生效,请关闭本窗口并双击 "启动代理.bat".$CR
+echo 要停止代理,请直接给 Win10 虚拟机关机,或者在 Linux 终端里按 Ctrl+C.$CR
+echo 代理已启动.要停止代理,请直接给 Win10 虚拟机关机,或者在此终端按 Ctrl+C. >> "C:\\Users\\Public\\Desktop\\3proxy\\log\\3proxy.log"$CR
 "C:\\Users\\Public\\Desktop\\3proxy\\links\\$proxy_exe" "C:\\Users\\Public\\Desktop\\3proxy\\cfg\\3proxy.cfg"$CR
 TASKKILL /IM "$proxy_exe"
 DEL
 EOF
 
-# 判断Windows是32位的还是64位的
+# 判断 Windows 是 32 位的还是 64 位的
 windows_arch=$(ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" echo "%PROCESSOR_ARCHITECTURE%")
 if [ "$windows_arch" == "*64*" ]; then
     windows_arch="x64"

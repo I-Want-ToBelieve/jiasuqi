@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 pwd="$(dirname "$0")"
+# shellcheck source=/dev/null
 source "$pwd/jiasuqi.conf"
 
 sysctl -w net.ipv4.ip_forward=1

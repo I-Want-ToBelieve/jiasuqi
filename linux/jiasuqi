@@ -14,10 +14,10 @@ proxy_exe="$2"     # 要代理的exe名称
 
 pwd="$(dirname "$0")"
 
-trap "$pwd/jiasuqi-stop.sh '$proxy_ip' '$proxy_exe'; echo '代理已停止。'; exit" HUP INT QUIT TERM PIPE
+trap '$pwd/jiasuqi-stop.sh "$proxy_ip" "$proxy_exe"; echo "代理已停止." exit' HUP INT QUIT TERM PIPE
 
 "$pwd"/jiasuqi-start.sh "$proxy_ip" "$proxy_exe"
 
 # jiasuqi-start.sh 意外退出时执行
 "$pwd"/jiasuqi-stop.sh "$proxy_ip" "$proxy_exe"
-echo '代理已停止。'
+echo '代理已停止.'

@@ -28,7 +28,7 @@ if "$pwd/wait-for-it.sh" -h "$proxy_ip" -p 22 -t 5; then
     scp -o StrictHostKeyChecking=no -i "$pwd/id_rsa" /tmp/jiasuqi-stop.bat "$windows_user@$proxy_ip:C:\\Users\\Public\\Desktop\\jiasuqi-stop.bat"
     ssh -o StrictHostKeyChecking=no -i "$pwd/id_rsa" "$windows_user@$proxy_ip" "C:\\Users\\Public\\Desktop\\jiasuqi-stop.bat"
 else
-    echo "虚拟机已关机，不需要停止虚拟机内代理。"
+    echo "虚拟机已关机,不需要停止虚拟机内代理."
 fi
 
 
@@ -54,7 +54,7 @@ iptables -t mangle -X SSTP_PREROUTING
 iptables -t mangle -X SSTP_RULE
 
 
-# 如果不延时，ipset -X 会失败
+# 如果不延时,ipset -X 会失败
 sleep 0.1
 
 ipset -F "$privaddr_setname"
@@ -68,7 +68,7 @@ umount /etc/resolv.conf
 rm /tmp/jiasuqi-resolv.conf
 
 
-# 这个脚本会破坏ss-tproxy的规则，所以顺便停止它
+# 这个脚本会破坏ss-tproxy的规则,所以顺便停止它
 ss-tproxy stop &>/dev/null
 ss-tproxy flush-postrule &>/dev/null
 ss-tproxy flush-dnscache &>/dev/null
